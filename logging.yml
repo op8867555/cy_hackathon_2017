@@ -1,0 +1,29 @@
+logging:
+  version: 1
+
+  formatters:
+      default:
+        format: '%(asctime)s %(levelname)-8s %(name)-15s %(message)s'
+        datefmt: '%Y-%m-%d %H:%M:%S'
+
+  handlers:
+      console:
+          class : logging.StreamHandler
+          level: DEBUG
+          formatter: default
+          stream: ext://sys.stdout
+      file:
+        class: logging.FileHandler
+        level: DEBUG
+        formatter: default
+        filename: 'test.log'
+
+  loggers:
+    'app':
+      handlers: [console, file]
+      level: INFO
+      propagate: False
+    'app.input':
+      handlers: [file]
+      level: INFO
+      propagate: False
