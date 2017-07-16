@@ -87,7 +87,9 @@ def read_train_data(path, x_col, y_col):
     df = df.query('{} in @col_freq.index'.format(y_col))
     size = col_freq[y_col][0]
     replace = True
-    fn = lambda obj: obj.loc[np.random.choice(obj.index, size, replace),:]
+    fn = lambda obj: pd.concat([
+        obj,
+        obj.loc[np.random.choice(obj.index, size - obj.index.size, replace),:]])
     df = df.groupby(y_col, as_index=False).apply(fn)
     X = df[x_col]
     X = df[x_col]
