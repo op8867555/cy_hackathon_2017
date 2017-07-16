@@ -5,7 +5,9 @@ function insertChat(who, text, time = 0){
     var elem =
         '<li class="mdl-list__item mdl-list__item--three-line">' +
           '<span class="mdl-list__item-primary-content">' +
-            '<i class="material-icons mdl-list__item-avatar">person</i>' +
+            '<i class="material-icons mdl-list__item-avatar">' +
+             ((who == "me") ? 'face' : 'person') +
+            '</i>' +
             '<span>' + ((who == "me") ? '自己' : '機器人')+ '</span>' +
               '<span class="mdl-list__item-text-body">' +
                  x +
