@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from jieba import Tokenizer
 from sklearn.preprocessing import LabelEncoder
 from sklearn.pipeline import Pipeline
@@ -57,6 +58,8 @@ stop_words += '''
 
 
 words = '''
+亂丟
+垃圾
 柏油路面
 被罰
 低收入戶
@@ -78,10 +81,15 @@ def read_answer(path):
 def read_train_data(path, x_col, y_col):
     df = pd.read_csv(path, index_col=0)
     df.dropna(inplace=True)
-    kept_columns = \
+    col_freq = \
         df[y_col].value_counts().to_frame() \
-        .query('{} > 10'.format(y_col)).index
-    df = df.query('{} in @kept_columns'.format(y_col))
+        .query('{} > 10'.format(y_col))
+    df = df.query('{} in @col_freq.index'.format(y_col))
+    size = col_freq[y_col][0]
+    replace = True
+    fn = lambda obj: obj.loc[np.random.choice(obj.index, size, replace),:]
+    df = df.groupby(y_col, as_index=False).apply(fn)
+    X = df[x_col]
     X = df[x_col]
     Y = df[y_col]
     return (X, Y)
