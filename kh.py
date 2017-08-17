@@ -128,22 +128,34 @@ print("Accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
 import Levenshtein
 import pandas as pd
 
-# 讀取慣例庫
-df_routine_table = pd.read_csv('routine_table.csv')
-df_routine_table.fillna(value='', inplace=True) # 以免資料不等長出錯
 
-# 計算和各類別的距離
-df_routine_table['min_dist'] = [
-    np.min([Levenshtein.distance('鑰匙掉了',i) for i in df_routine_table.iloc[i]])
-    for i in range(df_routine_table.index.size)
-]
+# 慣例回應
+def get_routine_response(x):
+    # 讀取慣例庫
+    df_routine_table = pd.read_csv('routine_table.csv')
+    df_routine_table.fillna(value='', inplace=True) # 以免資料不等長出錯
 
-display(df_routine_table)
+    # 計算和各類別的距離
+    df_routine_table['min_dist'] = [
+        np.min([Levenshtein.distance(x ,i) for i in df_routine_table.iloc[i]])
+        for i in range(df_routine_table.index.size)
+    ]
 
-# display( 
-#     df_routine_table.sort_values(by='min_dist').index[0]
-# )
+    # 按照距離降冪排序
+    df_routine_table.sort_values(by = 'min_dist', inplace = True)
 
+    if(4 < df_routine_table['min_dist'].iloc[0]):
+        print('距離過大，應該使用其他分類器')
+        return -1
+    else:
+        return df_routine_table['response'].iloc[0]
+
+get_routine_response('你咬不要吃大便')
+
+#%%
+display("display done")
+print('print done')
+'last object done'
 
 #%%
 def predict(x):
