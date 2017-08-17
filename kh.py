@@ -128,7 +128,6 @@ print("Accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
 import Levenshtein
 import pandas as pd
 
-
 # 慣例回應
 def get_routine_response(x):
     # 讀取慣例庫
@@ -150,24 +149,20 @@ def get_routine_response(x):
     else:
         return df_routine_table['response'].iloc[0]
 
-get_routine_response('你咬不要吃大便')
-
-#%%
-display("display done")
-print('print done')
-'last object done'
+# get_routine_response('這是一個嘗試讓距離過大的例句')
 
 #%%
 def predict(x):
-    
-
-    if not pipeline.named_steps['vectorize'].transform([x]).nnz:
-        return \
-                '請換個更仔細的方式再敘述您的問題！'
-    answer = label_encoder.inverse_transform(pipeline.predict([x]))[0]
-    answer_text = answer + '\n' + answer_data.get(answer, '')
-    return answer_text
-
+    routine_response = get_routine_response(x)
+    if(-1!=routine_response) #距離任何一類慣例夠接近
+        return routine_response
+    else: #距離任何一類慣例太遠，改用語料庫+機器學習   
+        if not pipeline.named_steps['vectorize'].transform([x]).nnz:
+            return \
+                    '請換個更仔細的方式再敘述您的問題！'
+        answer = label_encoder.inverse_transform(pipeline.predict([x]))[0]
+        answer_text = answer + '\n' + answer_data.get(answer, '')
+        return answer_text
 
 #%%
 predict('')
