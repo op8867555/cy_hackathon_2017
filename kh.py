@@ -154,7 +154,7 @@ def get_routine_response(x):
 #%%
 def predict(x):
     routine_response = get_routine_response(x)
-    if(-1!=routine_response) #距離任何一類慣例夠接近
+    if(-1!=routine_response): #距離任何一類慣例夠接近
         return routine_response
     else: #距離任何一類慣例太遠，改用語料庫+機器學習   
         if not pipeline.named_steps['vectorize'].transform([x]).nnz:
